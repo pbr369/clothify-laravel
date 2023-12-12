@@ -13,12 +13,24 @@ use Illuminate\Support\Facades\Cookie;
 class AuthController extends Controller
 {
     public function register(Request $request) {
-        return User::create([
+        try {
+        $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input('name')),
+            'password' => Hash::make($request->input('password')),
             'roles' => $request->input('roles'),
         ]);
+
+        return response([
+            'message' => 'User registered successfully',
+            'user' => $user,
+        ], Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+        return response([
+            'error' => 'Registration failed',
+            'message' => $e->getMessage(),
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function login(Request $request) {
@@ -35,7 +47,8 @@ class AuthController extends Controller
         $cookie = cookie('jwt', $token, 60 * 24);
 
         return response([
-            'message' => 'Login successful'
+            'message' => 'Login successful',
+            'user' => $user,
         ])->withCookie($cookie);
     }
 
