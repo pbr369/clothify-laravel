@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -34,13 +35,19 @@ class AuthController extends Controller
         $cookie = cookie('jwt', $token, 60 * 24);
 
         return response([
-            'message' => 'Success'
+            'message' => 'Login successful'
         ])->withCookie($cookie);
     }
 
     public function user() {
-
+        return Auth::user();
     }
 
+    public function logout() {
+        $cookie = Cookie::forget('jwt');
 
+        return response ([
+            'message' => 'Logout Successs'
+        ])->withCookie($cookie);
+    }
 }
