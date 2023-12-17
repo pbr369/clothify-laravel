@@ -29,16 +29,15 @@ Route::get('/product/{id}', [ProductsController::class, 'getProduct']);
 
 Route::get('/add-products', [ProductsController::class, 'create']);
 Route::post('/store-products', [ProductsController::class, 'store']);
-Route::get('/edit-products/{id}', [ProductsController::class, 'viewEditProducts']);
-Route::get('/edit-products/{id}', [ProductsController::class, 'submitEditProducts']);
 
-Route::put('/update-product/{id}', [ProductsController::class, 'updateProduct']);
-Route::get('/delete-product/{id}', [ProductsController::class, 'deleteProduct']);
+Route::put('/update-product/{id}', [ProductsController::class, 'update']);
+Route::get('/delete-product/{id}', [ProductsController::class, 'destroy']);
 
-Route::put('/update-name', [AuthController::class, 'updateName']);
-Route::put('/update-password', [AuthController::class, 'updatePassword']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/update-name', [AuthController::class, 'updateName']);
+    Route::put('/update-password', [AuthController::class, 'updatePassword']);
+    Route::put('/update-address', [AuthController::class, 'updateAddress']);
 });

@@ -63,4 +63,76 @@ class AuthController extends Controller
             'message' => 'Logout Successs'
         ])->withCookie($cookie);
     }
+
+    public function updateName(Request $request)
+    {
+        return $this->updateProfileField($request, 'name', 'Name');
+    }
+
+    public function updatePassword(Request $request)
+    {
+    try {
+
+        // Validate the request data
+        $request->validate([
+            'currentPassword' => 'required|string',
+            'newPassword' => 'required|string|min:8',
+            'confirmPassword' => 'required|string|same:newPassword',
+        ]);
+
+        // Verify the current password
+        if (!Hash::check($request->input('currentPassword'), $user->password)) {
+            return response([
+                'error' => 'Password update failed',
+                'message' => 'Current password is incorrect',
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Update the password
+        $user->password = Hash::make($request->input('newPassword'));
+
+        $user->save();
+
+        return response([
+            'message' => 'Password updated successfully',
+            'user' => $user,
+        ]);
+    } catch (\Exception $e) {
+        return response([
+            'error' => 'Password update failed',
+            'message' => $e->getMessage(),
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+    }
+
+    public function updateAddress(Request $request)
+    {
+        return $this->updateProfileField($request, 'address', 'Address');
+    }
+
+    private function updateProfileField(Request $request, $field, $fieldName)
+    {
+        try {
+            $user = Auth::user();
+
+            // Validate the request data
+            $request->validate([
+                $field => 'required|string|max:255',
+            ]);
+
+            // Update the profile field
+            $user->{$field} = $request->input($field);
+            $user->save();
+
+            return response([
+                'message' => "{$fieldName} updated successfully",
+                'user' => $user,
+            ]);
+        } catch (\Exception $e) {
+            return response([
+                'error' => "{$fieldName} update failed",
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
