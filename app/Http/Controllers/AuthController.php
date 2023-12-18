@@ -49,6 +49,7 @@ class AuthController extends Controller
         return response([
             'message' => 'Login successful',
             'user' => $user,
+            'token' => $token,
         ])->withCookie($cookie);
     }
 
@@ -72,7 +73,6 @@ class AuthController extends Controller
     public function updatePassword(Request $request)
     {
     try {
-
         // Validate the request data
         $request->validate([
             'currentPassword' => 'required|string',
@@ -90,7 +90,7 @@ class AuthController extends Controller
 
         // Update the password
         $user->password = Hash::make($request->input('newPassword'));
-
+        
         $user->save();
 
         return response([
@@ -103,7 +103,7 @@ class AuthController extends Controller
             'message' => $e->getMessage(),
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
-    }
+}
 
     public function updateAddress(Request $request)
     {

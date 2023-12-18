@@ -38,6 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/update-name', [AuthController::class, 'updateName']);
-    Route::put('/update-password', [AuthController::class, 'updatePassword']);
+    Route::middleware('auth:sanctum')->put('/update-password', [AuthController::class, 'updatePassword']);
     Route::put('/update-address', [AuthController::class, 'updateAddress']);
 });
