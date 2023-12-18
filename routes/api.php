@@ -27,7 +27,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/products', [ProductsController::class, 'getAllProducts']);
 Route::get('/product/{id}', [ProductsController::class, 'getProduct']);
 
-Route::get('/add-products', [ProductsController::class, 'create']);
+Route::post('/add-products', [ProductsController::class, 'store']);
 Route::post('/store-products', [ProductsController::class, 'store']);
 
 Route::put('/update-product/{id}', [ProductsController::class, 'update']);

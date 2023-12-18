@@ -42,11 +42,11 @@ class ProductsController extends Controller
         $product->reviews_num = $request->reviews_num;
         $product->sold = $request->sold;
 
-        $product->image_url_1 = $request->image_url_1;
-        $product->image_url_2 = $request->image_url_2;
-        $product->image_url_3 = $request->image_url_3;
-        $product->image_url_4 = $request->image_url_4;
-        $product->image_url_5 = $request->image_url_5;
+        $product->image_url_1 = $request->input('image_urls')[0] ?? $product->image_url_1;
+        $product->image_url_2 = $request->input('image_urls')[1] ?? $product->image_url_2;
+        $product->image_url_3 = $request->input('image_urls')[2] ?? $product->image_url_3;
+        $product->image_url_4 = $request->input('image_urls')[3] ?? $product->image_url_4;
+        $product->image_url_5 = $request->input('image_urls')[4] ?? $product->image_url_5;
 
         if($product->save()) {
             return response([
