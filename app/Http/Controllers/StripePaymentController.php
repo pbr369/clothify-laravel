@@ -38,7 +38,7 @@ class StripePaymentController extends Controller
 
     // Log the data
     \Log::info('Formatted Line Items:', $formattedLineItems);
-$shippingRates = [["next_day_air", 50000], ["business_day", 0]];
+    $shippingRates = [["next_day_air", 50000], ["business_day", 0]];
 
     $session = Session::create([
         'payment_method_types' => ['card'],
@@ -93,8 +93,8 @@ $shippingRates = [["next_day_air", 50000], ["business_day", 0]];
         'line_items' => $formattedLineItems,
         'mode' => 'payment',
         'customer' => $customer->stripe_customer_id,
-        'success_url' => config('app.url') . '/Checkoutsuccess',
-        'cancel_url' => config('app.url') . '/Allproducts',
+        'success_url' => config('app.url') . ':5173' . '/Checkoutsuccess',
+        'cancel_url' => config('app.url') . ':5173' . '/Allproducts',
     ]);
 
     return response()->json(['url' => $session->url]);
