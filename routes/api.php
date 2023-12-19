@@ -33,6 +33,7 @@ Route::post('/store-products', [ProductsController::class, 'store']);
 Route::put('/update-product/{id}', [ProductsController::class, 'update']);
 Route::get('/delete-product/{id}', [ProductsController::class, 'destroy']);
 
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
