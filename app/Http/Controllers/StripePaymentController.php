@@ -7,6 +7,8 @@ use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Stripe\ShippingOption;
 use App\Models\User;
+use App\Models\Orders;
+
 
 class StripePaymentController extends Controller
 {
