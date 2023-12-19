@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\StripePaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,7 @@ Route::post('/store-products', [ProductsController::class, 'store']);
 Route::put('/update-product/{id}', [ProductsController::class, 'update']);
 Route::get('/delete-product/{id}', [ProductsController::class, 'destroy']);
 
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+Route::post('/stripe/create-checkout-session', [StripePaymentController::class, 'createCheckoutSession']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
