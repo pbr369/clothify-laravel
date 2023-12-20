@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\OrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,16 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/products', [ProductsController::class, 'getAllProducts']);
 Route::get('/product/{id}', [ProductsController::class, 'getProduct']);
 
+Route::get('/showorders/{category}', [OrdersController::class, 'publicGetAllOrders']);
+Route::get('/showorders/{id}', [OrdersController::class, 'publicGetOrder']);
+Route::put('/mark-as-shipped/{id}', [OrdersController::class, 'markAsShipped']);
+Route::put('/cancel-order/{id}', [OrdersController::class, 'cancelOrder']);
+Route::put('/complete-order/{id}', [OrdersController::class, 'completedOrder']);
+Route::get('/showorders/toship', [OrdersController::class, 'publicGetAllOrders']);
+Route::get('/showorders/toreceive', [OrdersController::class, 'publicGetAllOrders']);
+Route::get('/showorders/completed', [OrdersController::class, 'publicGetAllOrders']);
+Route::get('/showorders/cancelled', [OrdersController::class, 'publicGetAllOrders']);
+
 Route::post('/add-products', [ProductsController::class, 'store']);
 Route::post('/store-products', [ProductsController::class, 'store']);
 
@@ -42,4 +53,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/update-name', [AuthController::class, 'updateName']);
     Route::middleware('auth:sanctum')->put('/update-password', [AuthController::class, 'updatePassword']);
     Route::put('/update-address', [AuthController::class, 'updateAddress']);
+
+    Route::get('/orders', [OrdersController::class, 'getAllOrders']);
+    Route::get('/order/{id}', [OrdersController::class, 'getOrder']);
+    Route::get('/toshiporders', [OrdersController::class, 'toShipOrders']);
+    Route::get('/toreceiveorders', [OrdersController::class, 'toReceiveOrders']);
+    Route::get('/completedorders', [OrdersController::class, 'completedOrders']);
 });

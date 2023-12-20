@@ -20,4 +20,9 @@ class Orders extends Model
         'shipping',
         'payment_status',
     ];
+
+    protected $casts = [
+        'product_id' => 'array',
+    ];
+
 }

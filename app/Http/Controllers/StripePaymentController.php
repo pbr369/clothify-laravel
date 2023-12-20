@@ -37,9 +37,6 @@ class StripePaymentController extends Controller
         'quantity' => $item['amount'], 
     ];
     }
-
-    // Log the data
-    \Log::info('Formatted Line Items:', $formattedLineItems);
     $shippingRates = [["next_day_air", 50000], ["business_day", 0]];
 
     $session = Session::create([
@@ -99,7 +96,69 @@ class StripePaymentController extends Controller
         'cancel_url' => config('app.url') . ':5173' . '/Allproducts',
     ]);
 
-    return response()->json(['url' => $session->url]);
+
     
+    $getProdID = [];
+
+    foreach ($lineItems as $item) {
+      $getProdID[] = [
+        'product_id' => $item['id'],
+      ];
+    }
+
+$productIdsArray = array_column($getProdID, 'product_id');
+$productIdsString = implode(',', $productIdsArray);
+
+    $subtotal = 0;
+foreach ($formattedLineItems as $item) {
+    $subtotal += $item['price_data']['unit_amount'] * $item['quantity'] / 100;
+}
+
+// Calculate shipping cost
+$shippingCost = 0;
+
+foreach ($session->shipping_options as $shippingOption) {
+    if ($shippingOption['selected']) {
+        $shippingCost = $shippingOption['amount']['value'] / 100;
+        break;
+    }
+}
+
+// Calculate total including shipping cost
+$total = $subtotal + $shippingCost;
+
+$productNames = [];
+foreach ($formattedLineItems as $item) {
+    $productNames[] = $item['price_data']['product_data']['name'];
+}
+
+        $order = new Orders();
+        $order->user_id = $customer_id;
+        $order->status = 'toship';
+        $order->product_name = implode(', ', $productNames);
+        $order->product_id = (int) $productIdsArray[0];
+        $order->subtotal = $subtotal;
+        $order->total = $total;
+        $order->payment_status = 'Paid';
+        $order->save();
+
+    // if ($session->status == 'paid') {
+    //   \Log::info('Payment status is "paid".');
+    //     $order = new Orders();
+    //     $order->user_id = $customer_id;
+    //     $order->status = 'To Ship';
+    //     $order->product_name = implode(', ', $productNames);
+    //     $order->product_id = (int) $productIdsArray[0];
+    //     $order->subtotal = $subtotal;
+    //     $order->total = $subtotal;
+    //     $order->payment_status = 'Paid';
+    //     $order->save();
+    //     \Log::info('Order saved successfully.');
+    // } else {
+    // \Log::info('Payment status is not "paid".');
+    // }
+
+    return response()->json(['url' => $session->url]);
+
     }
 }

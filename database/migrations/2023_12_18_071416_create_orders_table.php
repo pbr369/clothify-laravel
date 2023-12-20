@@ -15,13 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
-            $table->enum('status', ['To Ship', 'To Receive', 'Completed'])->default('To Ship');
-            $table->json('products'); // JSON column to store order items
-            $table->string('payment_intent_id');
+            $table->enum('status', ['toship', 'toreceive', 'completed', 'cancelled'])->default('toship');
+            $table->string('product_name', 225);
             $table->decimal('subtotal', 10, 2);
             $table->decimal('total', 10, 2);
-            $table->json('shipping'); // JSON column for shipping details
-            $table->string('payment_status');
+            $table->string('payment_status')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
